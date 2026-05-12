@@ -1,5 +1,3 @@
-// backend/middleware/auditMiddleware.js
-
 const db = require('../database/db');
 
 const URL_TO_TABLE = {
@@ -11,19 +9,13 @@ const URL_TO_TABLE = {
   auth:         'users',
 };
 
-// DELETE убран — old_values в middleware получить невозможно.
-// DELETE логировать вручную через writeAudit() в самом роуте.
 const METHOD_TO_ACTION = {
   POST:  'CREATE',
   PUT:   'UPDATE',
   PATCH: 'UPDATE',
 };
 
-/**
- * writeAudit({ userId, action, tableName, recordId, oldValues, newValues, ip })
- * Прямая запись одной строки в audit_log.
- * Обязательно вызывать вручную для DELETE и PUT (чтобы сохранить old_values).
- */
+//Прямая запись одной строки в audit_log.
 async function writeAudit({ userId, action, tableName, recordId, oldValues, newValues, ip }) {
   try {
     const safeNew = newValues ? sanitize(newValues) : null;
@@ -48,14 +40,6 @@ async function writeAudit({ userId, action, tableName, recordId, oldValues, newV
   }
 }
 
-/**
- * auditMiddleware
- * Автоматически логирует POST/PUT/PATCH (не DELETE — нет old_values).
- * Подключать в server.js ПОСЛЕ authenticateToken, ДО роутов.
- *
- * Если роут сам вызвал writeAudit и выставил req._auditDone = true,
- * middleware пропускает дублирование.
- */
 function auditMiddleware(req, res, next) {
   if (!METHOD_TO_ACTION[req.method]) return next();
 
@@ -84,7 +68,7 @@ function auditMiddleware(req, res, next) {
       action,
       tableName,
       recordId,
-      oldValues: null,           // old_values для PUT — вручную через writeAudit в роуте
+      oldValues: null,      
       newValues: req.body ?? null,
       ip,
     });
@@ -95,7 +79,7 @@ function auditMiddleware(req, res, next) {
   next();
 }
 
-// ── helpers ──────────────────────────────────────────────────────────────────
+// helpers
 
 function sanitize(obj) {
   if (!obj || typeof obj !== 'object') return obj;

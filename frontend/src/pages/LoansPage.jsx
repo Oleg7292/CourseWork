@@ -88,7 +88,6 @@ export default function LoansPage() {
 
   useEffect(() => { load() }, [load])
 
-  /* ── FIX 3: счета грузим при маунте, клиентов — лениво при открытии модала ── */
   useEffect(() => {
     api
       .getAccounts()
@@ -96,7 +95,6 @@ export default function LoansPage() {
       .catch((e) => toast(`Счета: ${e.message}`, 'error'))
   }, [])
 
-  /* ── ленивая загрузка клиентов при открытии модала ── */
   const openAddModal = () => {
     setAddOpen(true)
     setForm({ loan_type: 'consumer', interest_rate: '12', term_months: '12' })

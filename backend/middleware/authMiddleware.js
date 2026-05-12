@@ -1,10 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { can } = require('../config/permissions');
 
-/**
- * Проверка JWT-токена
- * Декодирует токен и добавляет req.user = { id, username, role }
- */
+//Проверка JWT-токена
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -15,7 +12,7 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = decoded; // req.user = { id, username, role }
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
@@ -25,10 +22,6 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-/**
- * Проверка конкретного права доступа через матрицу RBAC
- * Использование: router.get('/', requirePermission('transactions:read'), handler)
- */
 const requirePermission = (action) => (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ error: 'Требуется авторизация' });
@@ -41,10 +34,6 @@ const requirePermission = (action) => (req, res, next) => {
   next();
 };
 
-/**
- * Устаревший способ проверки — оставлен для обратной совместимости
- * Лучше использовать requirePermission()
- */
 const requireRole = (...roles) => (req, res, next) => {
   if (!req.user || !roles.includes(req.user.role)) {
     return res.status(403).json({

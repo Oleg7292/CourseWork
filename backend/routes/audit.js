@@ -4,11 +4,7 @@ const { requirePermission } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-/**
- * GET /api/audit
- * Журнал аудита — только analyst и auditor и admin
- * Фильтры: user_id, action, table_name, date_from, date_to
- */
+//GET /api/audit только analyst и auditor и admin
 router.get('/', requirePermission('audit:read'), async (req, res) => {
   try {
     const { user_id, action, table_name, date_from, date_to, page = 1, limit = 50 } = req.query;
@@ -55,10 +51,7 @@ router.get('/', requirePermission('audit:read'), async (req, res) => {
   }
 });
 
-/**
- * GET /api/audit/stats
- * Статистика по журналу аудита (топ действий, активных пользователей)
- */
+// GET /api/audit/stats
 router.get('/stats', requirePermission('audit:read'), async (req, res) => {
   try {
     const [actionStats, userStats, tableStats] = await Promise.all([

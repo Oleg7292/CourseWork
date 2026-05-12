@@ -1,4 +1,3 @@
-// backend/routes/transactions.js
 const express = require('express');
 const { body, query, validationResult } = require('express-validator');
 const db = require('../database/db');

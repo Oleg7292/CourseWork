@@ -1,4 +1,3 @@
-// backend/routes/reports.js
 const express = require('express');
 const db = require('../database/db');
 const { requirePermission } = require('../middleware/authMiddleware');

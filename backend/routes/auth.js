@@ -50,7 +50,6 @@ router.post('/register', [
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    // Аудит регистрации
     await db.query(
       `INSERT INTO audit_log (user_id, action, table_name, record_id, new_values)
        VALUES ($1, 'REGISTER', 'users', $1, $2)`,

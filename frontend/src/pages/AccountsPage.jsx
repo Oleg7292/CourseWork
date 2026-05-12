@@ -7,7 +7,7 @@ import Modal from '../components/Modal'
 import Badge from '../components/Badge'
 import { Plus, X, Loader2 } from 'lucide-react'
 
-// ─── Утилиты ─────────────────────────────────────────────────────────────────
+// ─── Утилиты ────────
 
 const fmtMoney = (value, currency = 'RUB') => {
   const num = parseFloat(value || 0)
@@ -20,10 +20,9 @@ const fmtMoney = (value, currency = 'RUB') => {
   return num.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
-// PostgreSQL может вернуть is_active как булево, строку "true"/"false" или 1/0
 const isActiveVal = (v) => v === true || v === 1 || v === 'true'
 
-// ─── Справочники ──────────────────────────────────────────────────────────────
+// ─── Справочники ─────
 
 const ACCOUNT_TYPES = [
   { value: 'checking', label: 'Расчётный' },
@@ -34,7 +33,7 @@ const ACCOUNT_TYPES = [
 
 const CURRENCIES = ['RUB', 'USD', 'EUR']
 
-// ─── Компонент ────────────────────────────────────────────────────────────────
+// ─── Компонент ───────
 
 export default function AccountsPage() {
   const { user } = useAuth()
@@ -57,7 +56,7 @@ export default function AccountsPage() {
 
   const canModify = user?.role === 'admin' || user?.role === 'operator'
 
-  // ── Загрузка счетов ──────────────────────────────────────────────────────
+  // ── Загрузка счетов 
   const load = useCallback(() => {
     setLoading(true)
     const params = {}
@@ -70,14 +69,14 @@ export default function AccountsPage() {
 
   useEffect(() => { load() }, [load])
 
-  // ── Загрузка клиентов для модалки ────────────────────────────────────────
+  // ── Загрузка клиентов для модалки
   useEffect(() => {
     api.getClients({ limit: 100 })
       .then(d => setClients(d.clients ?? d))
       .catch(() => {})
   }, [])
 
-  // ── Открыть счёт ─────────────────────────────────────────────────────────
+  // ── Открыть счёт 
   const handleAdd = async (e) => {
     e.preventDefault()
     setSaving(true)
@@ -100,7 +99,7 @@ export default function AccountsPage() {
     }
   }
 
-  // ── Закрыть счёт ─────────────────────────────────────────────────────────
+  // ── Закрыть счёт 
   const handleClose = async (account) => {
     if (parseFloat(account.balance || 0) !== 0) {
       toast('Закрыть счёт можно только при нулевом балансе', 'error')
@@ -116,7 +115,7 @@ export default function AccountsPage() {
     }
   }
 
-  // ── Колонки таблицы ──────────────────────────────────────────────────────
+  // ── Колонки таблицы 
   const columns = [
     {
       key: 'account_number',
@@ -180,7 +179,7 @@ export default function AccountsPage() {
     },
   ]
 
-  // ── Рендер ────────────────────────────────────────────────────────────────
+  // ── Рендер ───────
   return (
     <div className="p-6 space-y-4">
 

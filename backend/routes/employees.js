@@ -1,4 +1,3 @@
-// backend/routes/employees.js
 const express = require('express');
 const { body, param, validationResult } = require('express-validator');
 const db = require('../database/db');

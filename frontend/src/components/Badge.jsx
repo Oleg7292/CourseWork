@@ -1,12 +1,4 @@
-/**
- * Badge — цветной бейдж статуса/типа
- *
- * Пропсы:
- *   status  — значение (ключ из справочника)
- *   type    — 'loan' | 'account' | 'tx' | 'role'   (default: 'loan')
- */
 export default function Badge({ status, type = 'loan' }) {
-  // ── цвета ────────────────────────────────────────────────────────────────
   const loanColors = {
     pending:  'bg-yellow-900/60 text-yellow-300 border border-yellow-700',
     approved: 'bg-blue-900/60   text-blue-300   border border-blue-700',
@@ -38,8 +30,7 @@ export default function Badge({ status, type = 'loan' }) {
     operator: 'bg-blue-900/60   text-blue-300   border border-blue-700',
     analyst:  'bg-teal-900/60   text-teal-300   border border-teal-700',
   }
-
-  // ── метки ────────────────────────────────────────────────────────────────
+  
   const labels = {
     // loans
     pending:  'Ожидание',

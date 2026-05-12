@@ -1,15 +1,3 @@
-/**
- * RBAC — Матрица прав доступа
- * Роли: admin | operator | consultant | analyst | auditor
- *
- * Описание ролей:
- *  admin      — полный доступ ко всем ресурсам
- *  operator   — операционист: управление счетами, транзакциями, кредитами
- *  consultant — консультант: работа с клиентами, открытие счетов, просмотр кредитов
- *  analyst    — специалист ИБ/аналитик: просмотр транзакций, отчётов, аудита
- *  auditor    — аудитор: только просмотр всех данных + аудит-лог
- */
-
 const PERMISSIONS = {
   admin: ['*'],
 
@@ -47,19 +35,16 @@ const PERMISSIONS = {
 };
 
 /**
- * Проверить наличие права у роли
- * @param {string} role — роль пользователя
- * @param {string} action — требуемое право (например 'transactions:read')
- * @returns {boolean}
+Проверить наличие права у роли
+@param {string} role 
+@param {string} action 
+@returns {boolean}
  */
 const can = (role, action) => {
   const perms = PERMISSIONS[role] || [];
   return perms.includes('*') || perms.includes(action);
 };
 
-/**
- * Список всех прав для отображения в документации
- */
 const ROLE_DESCRIPTIONS = {
   admin:      'Полный доступ ко всем функциям системы',
   operator:   'Управление счетами, транзакциями, кредитами и клиентами',

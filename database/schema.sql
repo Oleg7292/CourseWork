@@ -1,15 +1,6 @@
--- =============================================
--- СХЕМА БАЗЫ ДАННЫХ КОММЕРЧЕСКОГО БАНКА
--- Направление: Информационная безопасность
--- =============================================
-
--- Расширения
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- =============================================
--- ПОЛЬЗОВАТЕЛИ СИСТЕМЫ (персонал)
--- =============================================
 CREATE TABLE IF NOT EXISTS users (
     id              SERIAL PRIMARY KEY,
     username        VARCHAR(50) UNIQUE NOT NULL,
@@ -27,9 +18,9 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
--- =============================================
+
 -- ОТДЕЛЫ БАНКА
--- =============================================
+
 CREATE TABLE IF NOT EXISTS departments (
     id              SERIAL PRIMARY KEY,
     name            VARCHAR(100) NOT NULL,
@@ -37,9 +28,9 @@ CREATE TABLE IF NOT EXISTS departments (
     created_at      TIMESTAMP DEFAULT NOW()
 );
 
--- =============================================
+
 -- СОТРУДНИКИ
--- =============================================
+
 CREATE TABLE IF NOT EXISTS employees (
     id              SERIAL PRIMARY KEY,
     last_name       VARCHAR(50) NOT NULL,
@@ -56,9 +47,9 @@ CREATE TABLE IF NOT EXISTS employees (
     updated_at      TIMESTAMP DEFAULT NOW()
 );
 
--- =============================================
+
 -- КЛИЕНТЫ
--- =============================================
+
 CREATE TABLE IF NOT EXISTS clients (
     id              SERIAL PRIMARY KEY,
     last_name       VARCHAR(50) NOT NULL,
@@ -82,9 +73,9 @@ CREATE INDEX IF NOT EXISTS idx_clients_passport ON clients(passport_series, pass
 CREATE INDEX IF NOT EXISTS idx_clients_phone ON clients(phone);
 CREATE INDEX IF NOT EXISTS idx_clients_last_name ON clients(last_name);
 
--- =============================================
+
 -- СЧЕТА
--- =============================================
+
 CREATE TABLE IF NOT EXISTS accounts (
     id              SERIAL PRIMARY KEY,
     client_id       INTEGER NOT NULL REFERENCES clients(id),
@@ -104,9 +95,9 @@ CREATE TABLE IF NOT EXISTS accounts (
 CREATE INDEX IF NOT EXISTS idx_accounts_client ON accounts(client_id);
 CREATE INDEX IF NOT EXISTS idx_accounts_number ON accounts(account_number);
 
--- =============================================
+
 -- ТРАНЗАКЦИИ
--- =============================================
+
 CREATE TABLE IF NOT EXISTS transactions (
     id                  SERIAL PRIMARY KEY,
     account_id          INTEGER NOT NULL REFERENCES accounts(id),
@@ -125,9 +116,9 @@ CREATE INDEX IF NOT EXISTS idx_transactions_account ON transactions(account_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(created_at);
 CREATE INDEX IF NOT EXISTS idx_transactions_type ON transactions(transaction_type);
 
--- =============================================
+
 -- КРЕДИТЫ
--- =============================================
+
 CREATE TABLE IF NOT EXISTS loans (
     id                  SERIAL PRIMARY KEY,
     client_id           INTEGER NOT NULL REFERENCES clients(id),
@@ -150,9 +141,9 @@ CREATE TABLE IF NOT EXISTS loans (
 CREATE INDEX IF NOT EXISTS idx_loans_client ON loans(client_id);
 CREATE INDEX IF NOT EXISTS idx_loans_status ON loans(status);
 
--- =============================================
+
 -- ПЛАТЕЖИ ПО КРЕДИТАМ
--- =============================================
+
 CREATE TABLE IF NOT EXISTS loan_payments (
     id          SERIAL PRIMARY KEY,
     loan_id     INTEGER NOT NULL REFERENCES loans(id),
@@ -164,9 +155,9 @@ CREATE TABLE IF NOT EXISTS loan_payments (
 
 CREATE INDEX IF NOT EXISTS idx_loan_payments_loan ON loan_payments(loan_id);
 
--- =============================================
+
 -- ЖУРНАЛ АУДИТА
--- =============================================
+
 CREATE TABLE IF NOT EXISTS audit_log (
     id          SERIAL PRIMARY KEY,
     user_id     INTEGER REFERENCES users(id),
@@ -182,9 +173,9 @@ CREATE TABLE IF NOT EXISTS audit_log (
 CREATE INDEX IF NOT EXISTS idx_audit_user ON audit_log(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_date ON audit_log(created_at);
 
--- =============================================
+
 -- ТРИГГЕР: автообновление updated_at
--- =============================================
+
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -202,9 +193,9 @@ CREATE TRIGGER update_loans_updated_at BEFORE UPDATE ON loans
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- =============================================
+
 -- ПРЕДСТАВЛЕНИЯ (VIEWS) для отчётности
--- =============================================
+
 CREATE OR REPLACE VIEW client_summary AS
 SELECT
     c.id, c.last_name, c.first_name, c.middle_name, c.phone, c.email,

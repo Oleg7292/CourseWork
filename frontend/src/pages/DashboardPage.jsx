@@ -44,8 +44,6 @@ export default function DashboardPage() {
   const stats     = data?.stats      || {}
   const txByDay   = data?.txByDay    || []
 
-  // FIX 1: parseInt для числовых значений из PG (приходят как строки)
-  // FIX 2: перевод loan_type на русский через LOAN_TYPE_LABELS
   const loansByType = (data?.loansByType || []).map(r => ({
     ...r,
     count:     parseInt(r.count || 0),
